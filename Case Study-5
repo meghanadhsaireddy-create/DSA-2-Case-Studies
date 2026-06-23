@@ -1,0 +1,112 @@
+import java.util.*;
+
+public class IntroSortDemo {
+
+    static final int SIZE_THRESHOLD = 16;
+
+    static void introSort(int[] arr) {
+        int depthLimit = 2 * (int)(Math.log(arr.length) / Math.log(2));
+        introSortUtil(arr, 0, arr.length - 1, depthLimit);
+    }
+
+    static void introSortUtil(int[] arr, int start, int end, int depthLimit) {
+        int size = end - start + 1;
+
+        if (size <= SIZE_THRESHOLD) {
+            insertionSort(arr, start, end);
+            return;
+        }
+
+        if (depthLimit == 0) {
+            heapSort(arr, start, end);
+            return;
+        }
+
+        int pivot = partition(arr, start, end);
+        introSortUtil(arr, start, pivot - 1, depthLimit - 1);
+        introSortUtil(arr, pivot + 1, end, depthLimit - 1);
+    }
+
+    static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+        return i + 1;
+    }
+
+    static void insertionSort(int[] arr, int left, int right) {
+        for (int i = left + 1; i <= right; i++) {
+            int key = arr[i];
+            int j = i - 1;
+
+            while (j >= left && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
+
+    static void heapSort(int[] arr, int start, int end) {
+        int n = end - start + 1;
+
+        for (int i = start + n / 2 - 1; i >= start; i--)
+            heapify(arr, n, i, start);
+
+        for (int i = end; i > start; i--) {
+            int temp = arr[start];
+            arr[start] = arr[i];
+            arr[i] = temp;
+
+            heapify(arr, i - start, start, start);
+        }
+    }
+
+    static void heapify(int[] arr, int n, int i, int offset) {
+        int largest = i;
+        int left = 2 * (i - offset) + 1 + offset;
+        int right = 2 * (i - offset) + 2 + offset;
+
+        if (left < offset + n && arr[left] > arr[largest])
+            largest = left;
+
+        if (right < offset + n && arr[right] > arr[largest])
+            largest = right;
+
+        if (largest != i) {
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+
+            heapify(arr, n, largest, offset);
+        }
+    }
+
+    static void printArray(int[] arr) {
+        for (int i : arr)
+            System.out.print(i + " ");
+    }
+
+    public static void main(String[] args) {
+
+        int[] arr = {22, 7, 19, 3, 15, 28, 5, 11, 9, 35, 1, 39, 12, 18, 24, 31};
+
+        introSort(arr);
+
+        System.out.println("Sorted Array:");
+        printArray(arr);
+    }
+}
