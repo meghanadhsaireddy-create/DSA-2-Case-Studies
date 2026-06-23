@@ -1,0 +1,39 @@
+import java.util.*;
+
+public class CoinChangeDP {
+
+    public static void main(String[] args) {
+
+        int[] coins = {1, 2, 5, 10, 20};
+        int amount = 43;
+
+        int[] dp = new int[amount + 1];
+        int[] prev = new int[amount + 1]; // to track coins used
+
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            for (int coin : coins) {
+                if (i >= coin && dp[i - coin] != Integer.MAX_VALUE) {
+                    if (dp[i] > dp[i - coin] + 1) {
+                        dp[i] = dp[i - coin] + 1;
+                        prev[i] = coin;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Minimum coins: " + dp[amount]);
+
+        List<Integer> usedCoins = new ArrayList<>();
+        int temp = amount;
+
+        while (temp > 0) {
+            usedCoins.add(prev[temp]);
+            temp -= prev[temp];
+        }
+
+        System.out.println("Coins used: " + usedCoins);
+    }
+}
