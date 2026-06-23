@@ -1,0 +1,46 @@
+import java.util.*;
+
+class Block {
+    int min, max;
+
+    Block(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
+}
+
+public class ZoneMapDemo {
+
+    public static void main(String[] args) {
+
+        // Define blocks (zone map: min and max values of each block)
+        Block[] blocks = {
+            new Block(0, 100),     // Block 0
+            new Block(101, 200),   // Block 1
+            new Block(201, 300),   // Block 2
+            new Block(301, 400),   // Block 3
+            new Block(401, 500)    // Block 4
+        };
+
+        int queryMin = 150;
+        int queryMax = 350;
+
+        System.out.println("Query Range: " + queryMin + " to " + queryMax);
+
+        int scannedCount = 0;
+
+        for (int i = 0; i < blocks.length; i++) {
+            Block b = blocks[i];
+
+
+            if (b.max < queryMin || b.min > queryMax) {
+                System.out.println("Skipping Block " + i);
+            } else {
+                System.out.println("Scanning Block " + i);
+                scannedCount++;
+            }
+        }
+
+        System.out.println("Total Blocks Scanned: " + scannedCount);
+    }
+}
